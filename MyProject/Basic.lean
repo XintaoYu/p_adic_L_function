@@ -456,7 +456,7 @@ lemma pro4 (f: α → β)(ss :n≥ 1):  coff_in_poly f n = f (n•1) + ∑ i ∈
     simp
     ring
   rw[ds2]
-#check BinomialRing.multichoose
+
 
 lemma summable_th1_1 (a:ℕ → ℚ_[p])(hs : Summable a)(n:ℕ ) :  Summable (fun x => a (n+x)):=by
   have: (fun x => a (x+n))=(fun x => a (n+x)) :=by
@@ -467,7 +467,7 @@ lemma summable_th1_1 (a:ℕ → ℚ_[p])(hs : Summable a)(n:ℕ ) :  Summable (f
     exact (Set.eqOn_univ (fun x => a (x + n)) fun x => a (n + x)).mp fun ⦃x⦄ _ => this x
   rw[← this]
   exact (summable_nat_add_iff n).mpr hs
-#check summable_in_p_adic_field
+
 lemma summable_th2 (a:ℕ → ℚ_[p])(b:ℕ → ℤ_[p])(hs : Summable a) :  Summable (fun x => b x• a x ):=by
    rw[summable_in_p_adic_field] at hs
    rw[summable_in_p_adic_field]
@@ -784,7 +784,7 @@ lemma Padic_int_tsum (ha:Summable a)(z:ℝ)(sa:z>0):(∀ i:ℕ ,‖a i‖ < z)�
  have: ‖∑ i ∈ Finset.range N, a i - ∑' (i : ℕ), a i‖ >‖∑ i ∈ Finset.range N, a i‖-‖∑' (i : ℕ), a i‖ :=by sorry
  sorry
 
-#check IsUltrametricDist.norm_sum_le_of_forall_le_of_nonempty
+
 
 lemma is_continue_for_summable_multchoose(ha:Summable a): Continuous
   (fun (x:ℤ_[p]) => (∑' i : ℕ ,(multichoose'  x  i  )• a i )  ) :=by
@@ -880,7 +880,7 @@ lemma is_continue_for_summable_multchoose(ha:Summable a): Continuous
 
     exact this
 
-#check summable_th2
+
 
 
 
@@ -889,7 +889,7 @@ lemma is_continue_for_summable_multchoose(ha:Summable a): Continuous
 end is_continue_for_summable_multchoose
 section bijective
 variable {p : ℕ} [Fact (Nat.Prime p)]
-#check C(ℤ_[p], ℚ_[p])
+
 
 def bound_a :Set (ℕ → ℚ_[p]):={a | Summable a}
 
@@ -957,7 +957,7 @@ lemma bij : (fun_c_f_to_bound_a (p := p)).Bijective  :=by
        have:∀ x:ℤ_[p], s x =0 :=by
          intro x
          by_contra sa
-         have:‖s x‖ >0 :=by exact norm_pos_iff'.mpr sa
+         have:‖s x‖ >0 := by exact norm_pos_iff.mpr sa
          have:‖s x‖.toNNReal  >0:=by exact Real.toNNReal_pos.mpr this
          have: (‖s x‖.toNNReal :ENNReal) >0:=by exact ENNReal.coe_pos.mpr this
          have s1:  ∀ r > 0, ∃ y:ℕ , dist x y < r :=by
@@ -1082,16 +1082,13 @@ lemma existance (f:ℤ_[p]→ ℚ_[p])(hs:Continuous f): ∃   a : ℕ → ℚ_[
      exact ds1
    · exact (fun_c_f_to_bound_a ⟨f,hs⟩).2
 
-#check Nat.case_strong_induction_on
-#check pro4
+
 end bijective
 
 section the_measure_of_f
 
 variable {p : ℕ} [sh:Fact (Nat.Prime p)]
-#check ContinuousMap.metricSpace (ℤ_[p]) (ℚ_[p])
-#check MetricSpace C(ℤ_[p],ℚ_[p])
-#check lt_iSup_iff
+
 lemma discrete_value1 (f: C(ℤ_[p],ℚ_[p])):∃ a:ℤ_[p], ‖f a‖ =‖f‖ :=by
    have:‖f‖=0∨ ‖f‖> 0 :=by
     sorry
@@ -1105,7 +1102,7 @@ lemma discrete_value1 (f: C(ℤ_[p],ℚ_[p])):∃ a:ℤ_[p], ‖f a‖ =‖f‖ 
 
    rw[ContinuousMap.norm_eq_iSup_norm f]
    by_contra qj
-   have k1: ∀ a:ℤ_[p] ,‖f a‖ <iSup (fun a => ‖f a‖ ) :=by
+   have k1: ∀ a: ℤ_[p] ,‖f a‖ < iSup (fun a => ‖f a‖ ) :=by
       intro a
       have:‖f a‖≤ iSup (fun a => ‖f a‖ ) :=by
         have:‖f a‖ ≤ ‖f‖  :=by exact ContinuousMap.norm_coe_le_norm f a
@@ -1139,11 +1136,11 @@ lemma discrete_value1 (f: C(ℤ_[p],ℚ_[p])):∃ a:ℤ_[p], ‖f a‖ =‖f‖ 
    rw[grg] at slk
    have: (Int.clog p ‖f‖ - 1) < (-(f i).valuation) :=by
       have:(p:ℝ)>1 :=by sorry
-      exact (zpow_lt_iff_lt this).mp slk
+      exact (zpow_lt_zpow_iff_right₀ this).mp slk
    have:Int.clog p ‖f‖≤  (-(f i).valuation) :=by exact Int.le_of_sub_one_lt this
    have jrj: (p:ℝ)^ (Int.clog p ‖f‖ ) ≤ (p:ℝ)^ (-(f i).valuation) :=by
       have ko:(p:ℝ)>1 :=by sorry
-      exact (zpow_le_iff_le ko).mpr this
+      exact (zpow_le_zpow_iff_right₀ ko).mpr this
    rw[← grg] at jrj
    have: ‖f‖ ≤ (p:ℝ)^ (Int.clog p ‖f‖ ) :=by
       refine Int.self_le_zpow_clog ?hb ‖f‖
@@ -1159,7 +1156,6 @@ lemma discrete_value1 (f: C(ℤ_[p],ℚ_[p])):∃ a:ℤ_[p], ‖f a‖ =‖f‖ 
 
 
 
-#check pro4
 end the_measure_of_f
 section theorem_1_3_2
 
@@ -1167,7 +1163,7 @@ variable {p : ℕ} [sh:Fact (Nat.Prime p)] (f : C(ℤ_[p],ℚ_[p]))
 
 
 theorem mahler₁ : Filter.Tendsto (fun (n : ℕ) => ‖(coff_in_poly f n)‖) Filter.atTop (nhds 0) := sorry
-#check summable_th3
+
 
 
 theorem mahler₂ : ∀ x : ℤ_[p], f x = ∑' (n : ℕ), (multichoose' x n)•(coff_in_poly f n) := by
